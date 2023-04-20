@@ -1,0 +1,66 @@
+/*question:
+Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+
+You have the following three operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+ 
+
+Example 1:
+
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+Example 2:
+
+Input: word1 = "intention", word2 = "execution"
+Output: 5
+Explanation: 
+intention -> inention (remove 't')
+inention -> enention (replace 'i' with 'e')
+enention -> exention (replace 'n' with 'x')
+exention -> exection (replace 'n' with 'c')
+exection -> execution (insert 'u')
+ 
+
+Constraints:
+
+0 <= word1.length, word2.length <= 500
+word1 and word2 consist of lowercase English letters.
+Accepted
+639,282
+Submissions
+1,173,514
+*/
+//Answer code:
+int minDistance(char * word1, char * word2){
+    int m = strlen(word2);
+    char *s1 = word1;
+    char *s2 = word2;
+    
+    int *mat = malloc(sizeof(int) * (m+1));
+    
+    for(int i=0; i<=m; ++i) {
+        mat[i] = i;
+    }
+    
+    for(int i=1; *s1; ++i, ++s1) {
+        s2 = word2;
+        int pre = i-1;
+        mat[0] = i;
+        for(int j=1; j<=m; ++s2, ++j) {
+            int tmp = mat[j];
+            int min = *s2 == *s1 ? pre : pre+1;
+            min = min < mat[j-1]+1 ? min : mat[j-1]+1;    
+            mat[j] = mat[j]+1 < min ? mat[j]+1 : min;
+            pre = tmp;
+        }
+    }
+
+    return mat[m];
+}
